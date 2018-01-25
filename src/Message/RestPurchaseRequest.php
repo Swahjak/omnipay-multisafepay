@@ -384,6 +384,49 @@ class RestPurchaseRequest extends RestAbstractRequest
     }
 
     /**
+     * Get gender.
+     *
+     * @return null|string
+     */
+    public function getGender()
+    {
+        return $this->getParameter('gender');
+    }
+
+    /**
+     * Set gender.
+     * @param string $value
+     *
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+    public function setGender($value)
+    {
+        return $this->setParameter('gender', $value);
+    }
+
+    /**
+     * Get date of birth.
+     *
+     * @return null|string
+     */
+    public function getDateOfBirth()
+    {
+        return $this->getParameter('dob');
+    }
+
+    /**
+     * Set date of birth.
+     *
+     * @param string $value
+     *
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+    public function setDateOfBirth($value)
+    {
+        return $this->setParameter('dob', $value);
+    }
+
+    /**
      * Get the payment options.
      *
      * @return array
@@ -447,6 +490,8 @@ class RestPurchaseRequest extends RestAbstractRequest
     {
         $data = array(
             'issuer_id' => $this->getIssuer(),
+            'gender' => $this->getGender(),
+            'birthday' => $this->getDateOfBirth()
         );
 
         return array_filter($data);
@@ -483,6 +528,12 @@ class RestPurchaseRequest extends RestAbstractRequest
             $this->getGateway() == 'IDEAL'
         ) {
             $this->validate('issuer');
+        }
+
+        if($this->getType() == 'redirect'
+            && ($this->getGateway() === 'KLARNA' || $this->getGateway() === 'PAYAFTER')) {
+
+            $this->validate('gender', 'dob');
         }
 
         $data = array(
