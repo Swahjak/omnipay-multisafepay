@@ -5,6 +5,9 @@
 
 namespace Omnipay\MultiSafepay\Message;
 
+use Omnipay\MultiSafepay\MultiSafepayCheckoutOptions;
+use Omnipay\MultiSafepay\MultiSafepayItem;
+
 /**
  * MultiSafepay Rest Api Purchase Request.
  *
@@ -447,6 +450,24 @@ class RestPurchaseRequest extends RestAbstractRequest
     }
 
     /**
+     * @return null|array|MultiSafepayCheckoutOptions
+     */
+    public function getCheckoutOptions()
+    {
+        return $this->getParameter('checkoutOptions');
+    }
+
+    /**
+     * @param array|MultiSafepayCheckoutOptions $value
+     *
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+    public function setCheckoutOptions($value)
+    {
+        return $this->setParameter('checkoutOptions', $value);
+    }
+
+    /**
      * Get the payment options.
      *
      * @return array
@@ -528,12 +549,8 @@ class RestPurchaseRequest extends RestAbstractRequest
         $itemBag = $this->getItems();
         if (! empty($itemBag)) {
             foreach ($itemBag->all() as $item) {
-                $items[] = array(
-                    'name' => $item->getName(),
-                    'description' => $item->getDescription(),
-                    'quantity' => $item->getQuantity(),
-                    'unit_price' => $item->getPrice(),
-                );
+                /** @var MultiSafepayItem $item */
+                $items[] = $item instanceof MultiSafepayItem ? $item->jsonSerialize() : $item->getParameters();
             }
         }
 
@@ -618,6 +635,13 @@ class RestPurchaseRequest extends RestAbstractRequest
 
         if (! empty($getItemBagData)) {
             $data['shopping_cart']['items'] = $getItemBagData;
+        }
+
+        $checkoutOptions = $this->getCheckoutOptions();
+
+        if(!empty($checkoutOptions)) {
+
+            $data['checkout_options'] = $checkoutOptions;
         }
 
         return array_filter($data);
