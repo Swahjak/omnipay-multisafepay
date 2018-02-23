@@ -14,7 +14,7 @@ class MultiSafepayItem extends Item implements \JsonSerializable
      */
     public function getMerchantItemId()
     {
-        return $this->parameters->get('merchant_id');
+        return $this->parameters->get('merchant_item_id');
     }
 
     /**
@@ -24,7 +24,7 @@ class MultiSafepayItem extends Item implements \JsonSerializable
      */
     public function setMerchantItemId($id)
     {
-        $this->parameters->set('merchant_id', $id);
+        $this->parameters->set('merchant_item_id', $id);
 
         return $this;
     }
@@ -59,7 +59,7 @@ class MultiSafepayItem extends Item implements \JsonSerializable
             'description' => $this->getParameter('description'),
             'quantity' => $this->getParameter('quantity'),
             'unit_price' => round($this->getParameter('price'), 10),
-            'merchant_id' => $this->getParameter('merchant_id'),
+            'merchant_item_id' => $this->getParameter('merchant_item_id'),
             'tax_table_selector' => $this->getParameter('tax_table_selector')
         );
     }
