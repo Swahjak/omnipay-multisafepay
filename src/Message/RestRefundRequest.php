@@ -5,6 +5,8 @@
 
 namespace Omnipay\MultiSafepay\Message;
 
+use Omnipay\MultiSafepay\MultiSafepayItem;
+
 /**
  * MultiSafepay Rest Api Refund Request.
  *
@@ -47,13 +49,40 @@ class RestRefundRequest extends RestAbstractRequest
 
         $this->validate('amount', 'currency', 'description', 'transactionId');
 
-        return array(
+        $data = array(
             'amount' => $this->getAmountInteger(),
             'currency' => $this->getCurrency(),
             'description' => $this->getDescription(),
             'id' => $this->getTransactionId(),
             'type' => 'refund',
         );
+
+        $getItemBagData = $this->getItemBagData();
+
+        if (! empty($getItemBagData)) {
+            $data['checkout_data']['items'] = $getItemBagData;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get itembag data.
+     *
+     * @return array
+     */
+    protected function getItemBagData()
+    {
+        $items = array();
+        $itemBag = $this->getItems();
+        if (! empty($itemBag)) {
+            foreach ($itemBag->all() as $item) {
+                /** @var MultiSafepayItem $item */
+                $items[] = $item instanceof MultiSafepayItem ? $item->jsonSerialize() : $item->getParameters();
+            }
+        }
+
+        return $items;
     }
 
     /**
