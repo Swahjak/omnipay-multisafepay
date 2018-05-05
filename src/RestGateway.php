@@ -255,4 +255,17 @@ class RestGateway extends AbstractGateway
             $parameters
         );
     }
+
+    /**
+     * @param array $parameters
+     *
+     * @return \Omnipay\MultiSafepay\Message\RestUpdatePurchaseRequest
+     */
+    public function updatePurchase(array $parameters = array())
+    {
+        return $this->createRequest(
+            'Omnipay\MultiSafepay\Message\RestUpdatePurchaseRequest',
+            $parameters
+        );
+    }
 }
