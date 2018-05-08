@@ -146,7 +146,7 @@ class RestUpdatePurchaseRequest extends RestAbstractRequest
         $this->validate('transactionId', 'status');
 
         $data = array(
-            'transactionId' => $this->getTransactionId(),
+            'transaction_id' => $this->getTransactionId(),
             'status' => $this->getStatus()
         );
 
@@ -181,11 +181,10 @@ class RestUpdatePurchaseRequest extends RestAbstractRequest
      */
     public function sendData($data)
     {
-        unset($data['transactionId']);
-
         $httpResponse = $this->sendRequest(
             'PATCH',
-            '/orders/' . $this->getTransactionId(),
+            '/orders/' . $data['transaction_id'],
+            null,
             $data
         );
 
