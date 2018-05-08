@@ -65,9 +65,17 @@ class RestUpdatePurchaseRequest extends RestAbstractRequest
      *
      * @return \Omnipay\Common\Message\AbstractRequest
      */
-    public function setTrackTraceUrl($trackTraceCode)
+    public function setTrackTraceUrl($trackTraceUrl)
     {
-        return $this->setParameter('tracktrace_url', $trackTraceCode);
+        return $this->setParameter('tracktrace_url', $trackTraceUrl);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrackTraceUrl()
+    {
+        return $this->getParameter('tracktrace_url');
     }
 
     /**
@@ -79,14 +87,31 @@ class RestUpdatePurchaseRequest extends RestAbstractRequest
     {
         return $this->setParameter('carrier', $carrier);
     }
+
+    /**
+     * @return string
+     */
+    public function getCarrier()
+    {
+        return $this->getParameter('carrier');
+    }
+
     /**
      * @param string
      *
      * @return \Omnipay\Common\Message\AbstractRequest
      */
-    public function setShipDAte($shipDate)
+    public function setShipDate($shipDate)
     {
         return $this->setParameter('ship_date', $shipDate);
+    }
+
+    /**
+     * @return string
+     */
+    public function getShipDate()
+    {
+        return $this->getParameter('ship_date');
     }
 
     /**
@@ -96,8 +121,17 @@ class RestUpdatePurchaseRequest extends RestAbstractRequest
      */
     public function setReason($reason)
     {
-        return $this->setParameter('ship_date', $reason);
+        return $this->setParameter('reason', $reason);
     }
+
+    /**
+     * @return string
+     */
+    public function getReason()
+    {
+        return $this->getParameter('reason');
+    }
+
     /**
      * Get the required data which is needed
      * to execute the API request.
@@ -109,13 +143,35 @@ class RestUpdatePurchaseRequest extends RestAbstractRequest
     {
         parent::getData();
 
-        $this->validate('transactionId');
+        $this->validate('transactionId', 'status');
 
-        $transactionId = $this->getTransactionId();
-
-        return array(
-            'transactionId' => $transactionId
+        $data = array(
+            'transactionId' => $this->getTransactionId(),
+            'status' => $this->getStatus()
         );
+
+        if($this->getInvoiceId()) {
+
+            $data['invoiced_id'] = $this->getInvoiceId();
+        }
+
+        if($this->getTrackTraceCode()) {
+
+            $data['tracktrace_code'] = $this->getTrackTraceCode();
+            $data['carrier'] = $this->getCarrier();
+
+            if($this->getTrackTraceUrl()) {
+
+                $data['tracktrace_url'] = $this->getTrackTraceUrl();
+            }
+        }
+
+        if($this->getReason()) {
+
+            $data['reason'] = $this->getReason();
+        }
+
+        return $data;
     }
 
     /**
