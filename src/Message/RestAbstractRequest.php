@@ -139,6 +139,8 @@ abstract class RestAbstractRequest extends AbstractRequest
         return array(
             'api_key' => $this->getApiKey(),
             'User-Agent' => $this->userAgent,
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json'
         );
     }
 
@@ -153,6 +155,11 @@ abstract class RestAbstractRequest extends AbstractRequest
      */
     protected function sendRequest($method, $endpoint, $query = null, $data = null)
     {
+        if(is_array($data)) {
+
+            $data = json_encode($data);
+        }
+
         $this->httpClient->getEventDispatcher()->addListener('request.error', function (Event $event) {
             $response = $event['response'];
             if ($response->isError()) {

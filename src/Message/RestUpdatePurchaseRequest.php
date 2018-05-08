@@ -180,6 +180,19 @@ class RestUpdatePurchaseRequest extends RestAbstractRequest
     }
 
     /**
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return array_merge(
+            parent::getHeaders(),
+            array(
+                'Content-Type' => 'application/json'
+            )
+        );
+    }
+
+    /**
      * @param array $data
      *
      * @return ResponseInterface|RestUpdatePurchaseResponse
@@ -193,7 +206,7 @@ class RestUpdatePurchaseRequest extends RestAbstractRequest
             'PATCH',
             '/orders/' . $transactionId,
             null,
-            $data
+            json_encode($data)
         );
 
         $this->response = new RestUpdatePurchaseResponse(
