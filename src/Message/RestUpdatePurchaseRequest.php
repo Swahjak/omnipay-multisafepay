@@ -150,6 +150,11 @@ class RestUpdatePurchaseRequest extends RestAbstractRequest
             'status' => $this->getStatus()
         );
 
+        if($this->getShipDate()) {
+
+            $data['ship_date'] = $this->getShipDate();
+        }
+
         if($this->getInvoiceId()) {
 
             $data['invoiced_id'] = $this->getInvoiceId();
@@ -181,9 +186,12 @@ class RestUpdatePurchaseRequest extends RestAbstractRequest
      */
     public function sendData($data)
     {
+        $transactionId = $data['transaction_id'];
+        unset($data['transaction_id']);
+
         $httpResponse = $this->sendRequest(
             'PATCH',
-            '/orders/' . $data['transaction_id'],
+            '/orders/' . $transactionId,
             null,
             $data
         );
