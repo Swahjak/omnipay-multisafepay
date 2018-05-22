@@ -515,6 +515,7 @@ class RestPurchaseRequest extends RestAbstractRequest
             'phone'             => $this->getCard()->getPhone(),
             'state'             => $this->getCard()->getState(),
             'zip_code'          => $this->getCard()->getPostcode(),
+            'ip_address'        => $this->getClientIp()
         );
 
         return array_filter(
